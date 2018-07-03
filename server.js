@@ -1,4 +1,5 @@
 var project_source = require('./app/js/project_source'),
+  bodyParser = require('body-parser'),
   express = require('express'),
   argv = require('optimist').argv,
   port = argv.p || 8118,
@@ -12,13 +13,16 @@ app.use(function(req, res, next){
   next();
 });
 
-app.use(express.bodyParser());
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json());
 
 //Load the static app files
 app.use(express.static('./app/'));
 app.set('title', 'Editor');
 
 requireAuthentication = function(req,res,next){
+  console.log(req.body);
+
   if(req.body.auth_token == auth_token)
     next();
   else
